@@ -35,10 +35,10 @@
 
 html {
   /** Colors */
-  --bg-color: #F1F4F5;
-  --bg-secondary: #FFF;
+  --bg-color: #FFFFFF;
+  --bg-secondary: #DCDDDE;
 
-  --brand-color: #5D43FB;
+  --brand-color: #B31F2E;
   --brand-color-reverse: #fff;
   --brand-color-hover: #4C33E5;
 
