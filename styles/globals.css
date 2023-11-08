@@ -35,10 +35,10 @@
 
 html {
   /** Colors */
-  --bg-color: #221F1F;
-  --bg-secondary: #DCDDDE;
+  --bg-color: #F1F4F5;
+  --bg-secondary: #FFF;
 
-  --brand-color: #B31F2E;
+  --brand-color: #5D43FB;
   --brand-color-reverse: #fff;
   --brand-color-hover: #4C33E5;
 
@@ -46,7 +46,7 @@ html {
   --brand-color-400-reverse: #FFF;
 
 
-  --primary-color: #FFFFFF;
+  --primary-color: #020617;
   --secondary-color: #334155;
   --tertiary-color: #64748b;
   --border-primary: #E5DFD7;
