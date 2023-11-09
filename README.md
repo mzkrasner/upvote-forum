@@ -1,8 +1,8 @@
-# Community forum following an upvote based ranking algorithm
+# BanklessDeSci Community Hub
 
-This discussion forum template is ranking posts shared by community member based on time weighted upvotes. It's built on an Open Social Protocol named [Orbis](https://useorbis.com/) data-ownership while making sure developers won't rely on a centralized entity / database to host their data.
+An open social application for the decentralized science community. Governed and moderated by the BanklessDeSci community. Built on Orbis and Ceramic with love.
 
-## Getting Started
+## Getting Started (to be updated)
 
 To get started developers should start by creating their `project` and `context` using the [Orbis Dashboard](https://useorbis.com/dashboard). The ID of the context created should be used in `_app.js`.
 
