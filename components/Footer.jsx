@@ -24,8 +24,8 @@ function Footer() {
                   </Link>
                 </li>*/}
                 <li>
-                  <Link className="text-secondary hover:underline flex flex-row items-center" href="https://useorbis.com/" target="_blank">
-                    Built with <OrbisLogo className="ml-1 mr-1" /> Orbis
+                  <Link className="text-secondary hover:underline flex flex-row items-center" href="https://www.banklessdesci.org/" target="_blank">
+                    Built by <OrbisLogo className="ml-1 mr-1" /> BanklessDAO
                   </Link>
                 </li>
 
@@ -41,7 +41,7 @@ function Footer() {
                 <Link
                   className="flex justify-center items-center text-brand text-brand-hover"
                   target="_blank"
-                  href="https://twitter.com/useOrbis">
+                  href="https://twitter.com/BanklessDeSci">
                   <TwitterIcon />
                 </Link>
               </li>
@@ -49,7 +49,7 @@ function Footer() {
                 <Link
                   className="flex justify-center items-center text-brand text-brand-hover"
                   target="_blank"
-                  href="https://github.com/OrbisWeb3/">
+                  href="https://upvote-forum-2mzigpgdf-saulthorins-projects.vercel.app">
                   <GithubIcon />
                 </Link>
               </li>
