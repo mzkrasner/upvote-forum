@@ -35,8 +35,8 @@
 
 html {
   /** Colors */
-  --bg-color: #555555;
-  --bg-secondary: #7E4343;
+  --bg-color: #7E4343;
+  --bg-secondary: #000000;
 
   --brand-color: #D02128;
   --brand-color-reverse: #111111;
