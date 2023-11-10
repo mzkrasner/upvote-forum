@@ -198,6 +198,10 @@ const CategoriesNavigation = ({ categories, nav, setNav }) => {
         {/* Left: Links */}
         <ul className="grow inline-flex flex-wrap text-sm font-medium -mx-3 -my-1">
           <NavItem selected={nav} category={{stream_id: "all", content: {displayName: "All"}}} onClick={setNav} />
+          <NavItem selected={nav} category={{stream_id: "discussion", content: {displayName: "Discussion"}}} onClick={setNav} />
+          <NavItem selected={nav} category={{stream_id: "events", content: {displayName: "Events"}}} onClick={setNav} />
+          <NavItem selected={nav} category={{stream_id: "polls", content: {displayName: "Polls"}}} onClick={setNav} />
+          <NavItem selected={nav} category={{stream_id: "app development", content: {displayName: "App Development"}}} onClick={setNav} />
           {categories.map((category, key) => {
             return (
               <NavItem key={key} selected={nav} category={category} onClick={setNav} />
