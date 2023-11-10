@@ -84,12 +84,12 @@ function Home({defaultPosts}) {
     <>
       <Head>
         {/** Title */}
-        <title key="title">Make this your own community forum | Orbis</title>
-        <meta property="og:title" content="Make this your own community forum | Orbis" key="og_title" />
+        <title key="title">BanklessDeSci Community Forum | Orbis</title>
+        <meta property="og:title" content="BanklessDeSci Community Forum | BanklessDAO" key="og_title" />
 
         {/** Description */}
-        <meta name="description" content="Build your own community forum powered by Orbis." key="description"></meta>
-        <meta property="og:description" content="Build your own community forum powered by Orbis." key="og_description"/>
+        <meta name="description" content="An open and decentralized social application. Built using Ceramic and Orbis Protocol." key="description"></meta>
+        <meta property="og:description" content="An open and decentralized social application. Built using Ceramic and Orbis Protocol." key="og_description"/>
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div className="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip bg-main">
@@ -103,7 +103,7 @@ function Home({defaultPosts}) {
               <Header />
 
               {/* Hero section with main title and description */}
-              <Hero title="Make this your own community forum!" description="Respectful and good-faith discussion should be the cornerstone of any decision-making process. In trying to enact change, please keep this principle in mind." />
+              <Hero title="BanklessDeSci Community Forum" description="Just a bunch of bankless nomads doing science without permission" />
 
               {/* Page content */}
               <section>
