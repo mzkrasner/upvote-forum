@@ -25,7 +25,7 @@ function Footer() {
                 </li>*/}
                 <li>
                   <Link className="text-secondary hover:underline flex flex-row items-center" href="https://www.banklessdesci.org/" target="_blank">
-                    Built by <OrbisLogo className="ml-1 mr-1" /> BanklessDAO
+                    Built by BanklessDAO
                   </Link>
                 </li>
 
@@ -49,7 +49,7 @@ function Footer() {
                 <Link
                   className="flex justify-center items-center text-brand text-brand-hover"
                   target="_blank"
-                  href="https://upvote-forum-2mzigpgdf-saulthorins-projects.vercel.app">
+                  href="https://github.com/BanklessDeSci">
                   <GithubIcon />
                 </Link>
               </li>
