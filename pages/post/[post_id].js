@@ -52,7 +52,7 @@ export default function Post({ post, post_id }) {
 /** Load content for Blog */
 Post.getInitialProps = async (context) => {
   let orbis_server = new Orbis({
-    useLit: false
+    useLit: true
   });
   let { data, error } = await orbis_server.getPost(context.query.post_id);
   /** Return results */
