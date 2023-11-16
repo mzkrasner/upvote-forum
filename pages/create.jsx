@@ -16,8 +16,8 @@ export default function Create() {
     <>
       <Head>
         {/** Title */}
-        <title key="title">Share a new post | BanklessDeSci Forum</title>
-        <meta property="og:title" content="Share a new post | BanklessDeSci Forum" key="og_title" />
+        <title key="title">Share a new post | BanklessDeSci Hub</title>
+        <meta property="og:title" content="Share a new post | BanklessDeSci Hub" key="og_title" />
 
         {/** Description */}
         <meta name="description" content="Discuss the future of BanklessDeSci" key="description"></meta>
@@ -32,7 +32,7 @@ export default function Create() {
             <main className="grow overflow-hidden">
               {/*  Site header */}
               <Header />
-              <Hero title="Sharing a new post on our forum" description="You are about to share a new post in the forum. Make sure to read our rules before doing so." image />
+              <Hero title="Sharing a new post on the BanklessDeSci Hub" description="You are about to share a new post. Make sure to read our rules before doing so." image />
 
               {/* Page content */}
               <section>
