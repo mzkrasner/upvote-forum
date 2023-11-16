@@ -84,8 +84,8 @@ function Home({defaultPosts}) {
     <>
       <Head>
         {/** Title */}
-        <title key="title">BanklessDeSci Community Forum | Orbis</title>
-        <meta property="og:title" content="BanklessDeSci Community Forum | BanklessDAO" key="og_title" />
+        <title key="title">BanklessDeSci Community Hub | Orbis</title>
+        <meta property="og:title" content="BanklessDeSci Community Hub | BanklessDAO" key="og_title" />
 
         {/** Description */}
         <meta name="description" content="An open and decentralized social application. Built using Ceramic and Orbis Protocol." key="description"></meta>
@@ -103,7 +103,7 @@ function Home({defaultPosts}) {
               <Header />
 
               {/* Hero section with main title and description */}
-              <Hero title="BanklessDeSci Community Forum" description="Doing science without permission" />
+              <Hero title="BanklessDeSci Community Hub" description="Doing science without permission" />
 
               {/* Page content */}
               <section>
