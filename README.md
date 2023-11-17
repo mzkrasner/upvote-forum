@@ -24,7 +24,7 @@ npm install
 npm run generate
 ```
 
-3. Create a .env file and enter the three required environment variables outlined in .env.example
+3. Create a .env file and enter the required environment variables outlined in .env.example. Feel free to copy them over as-is since the ones in .env.example are just dummy ones
 
 4. Run the application (make sure you are using node version 16):
 
