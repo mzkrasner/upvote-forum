@@ -10,16 +10,27 @@ To get started developers should start by creating their `project` and `context`
 
 Most of the colors can be updated in the `styles/global.css` file which contains CSS variables applied to the main `html` property.
 
-## Running locally
+## Getting Started Running Locally
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-First, run the development server:
+1. Install your dependencies:
 
 ```bash
+npm install
+```
+
+2. Generate your admin seed, admin did, and ComposeDB configuration file:
+
+```bash
+npm run generate
+```
+
+3. Create a .env file and enter the three required environment variables outlined in .env.example
+
+4. Run the application (make sure you are using node version 16):
+
+#### Development
+```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
