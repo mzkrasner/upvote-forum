@@ -30,6 +30,7 @@ npm run generate
 
 #### Development
 ```bash
+nvm use 16
 npm run dev
 ```
 
