@@ -73,6 +73,7 @@ const AttestEditor = () => {
           gotAttestations.data.accountAttestationIndex.edges[i].node.attester,
         recipient:
           gotAttestations.data.accountAttestationIndex.edges[i].node.recipient,
+        id: gotAttestations.data.accountAttestationIndex.edges[i].node.id,
       };
 
       arr.push(obj);
@@ -189,7 +190,16 @@ const AttestEditor = () => {
                           </p>
                         </div>
                         <div className="flex flex-row">
-                          <p className="text-base text-secondary mb-2"></p>
+                          <p className="text-base text-secondary mb-2 text-right">
+                            <a
+                              href={`https://ceramic-temp.hirenodes.io/api/v0/streams/${a.id}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-500"
+                            >
+                              Proof
+                            </a>
+                          </p>
                         </div>
                       </div>
                     );
