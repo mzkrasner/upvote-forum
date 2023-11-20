@@ -26,6 +26,36 @@ const AttestEditor = () => {
     grabAttestations();
   }, []);
 
+  const switchNetwork = async () => {
+    if (window.ethereum) {
+      try {
+        // Try to switch to the Mumbai testnet
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x1" }], 
+        });
+      } catch (error) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (error.code === 4902) {
+          try {
+            // Try to have the user add the chain
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: "0x1",
+                  rpcUrls: ["https://mainnet.infura.io/v3/"],
+                },
+              ],
+            });
+          } catch (addError) {
+            // handle "add" error
+          }
+        }
+      }
+  };
+}
+
   async function checkHolo(address) {
     const resp = await fetch(
       `https://api.holonym.io/sybil-resistance/phone/optimism?user=${address}&action-id=123456789`
@@ -82,6 +112,10 @@ const AttestEditor = () => {
   }
 
   async function attest(address) {
+    const network = await ethereum.request({ method: "eth_chainId" });
+    if (network !== "0x1") {
+      await switchNetwork();
+    }
     if (!address) {
       alert("Please enter a recipient address");
       setRecipient("");
