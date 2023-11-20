@@ -1,42 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import {
-  useOrbis,
-  User,
-  AccessRulesModal,
-  checkContextAccess,
-} from "@orbisclub/components";
+import { useOrbis } from "@orbisclub/components";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import {
-  EASContractAddress,
-  getAddressForENS,
-  CUSTOM_SCHEMAS,
-} from "../utils/utils";
+import { EASContractAddress, CUSTOM_SCHEMAS } from "../utils/utils";
 import { ethers } from "ethers";
-import ReactTimeAgo from "react-time-ago";
-import Link from "next/link";
-import { shortAddress, getIpfsLink, getTimestamp, sleep } from "../utils";
+import { shortAddress } from "../utils";
 import { useRouter } from "next/router";
-import { ExternalLinkIcon, LinkIcon, CodeIcon, LoadingCircle } from "./Icons";
-import ArticleContent from "./ArticleContent";
+import { set } from "zod";
 
 const AttestEditor = () => {
   const eas = new EAS(EASContractAddress);
-  const { orbis, user, credentials } = useOrbis();
-  const router = useRouter();
-  const [categoryAccessRules, setCategoryAccessRules] = useState([]);
-  const [accessRulesLoading, setAccessRulesLoading] = useState(false);
-  const [hasAccess, setHasAccess] = useState(false);
+  const { user } = useOrbis();
   const [unique, setIsUnique] = useState(0);
   const [checked, setChecked] = useState(false);
-  const [accessRulesModalVis, setAccessRulesModalVis] = useState(false);
-  const [status, setStatus] = useState(0);
   const [recipient, setRecipient] = useState("");
   const [attestations, setAttestations] = useState([]);
-  const [toolbarStyle, setToolbarStyle] = useState({});
-  const [storedSelectionStart, setStoredSelectionStart] = useState(0);
-  const [storedSelectionEnd, setStoredSelectionEnd] = useState(0);
-  const [view, setView] = useState(0);
   const textareaRef = useRef();
 
   /** Will load the details of the context and check if user has access to it  */
@@ -70,34 +48,47 @@ const AttestEditor = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),
     };
-    const attestations = await fetch(
+    const gotAttestations = await fetch(
       "/api/getattestations",
       requestOptions
     ).then((response) => response.json());
-    console.log(attestations);
+    if (gotAttestations.data.accountAttestationIndex === null) {
+      console.log(gotAttestations.data);
+      return;
+    }
+    console.log(gotAttestations.data.accountAttestationIndex.edges.length);
+    const arr = [];
     for (
       let i = 0;
-      i < attestations.data.accountAttestationIndex.edges.length;
+      i < gotAttestations.data.accountAttestationIndex.edges.length;
       i++
     ) {
       const obj = {
         given:
-          attestations.data.accountAttestationIndex.edges[i].node.attester ===
-          user.metadata.address.toLowerCase()
+          gotAttestations.data.accountAttestationIndex.edges[i].node
+            .attester === user.metadata.address.toLowerCase()
             ? true
             : false,
         attester:
-          attestations.data.accountAttestationIndex.edges[i].node.attester,
+          gotAttestations.data.accountAttestationIndex.edges[i].node.attester,
         recipient:
-          attestations.data.accountAttestationIndex.edges[i].node.recipient,
+          gotAttestations.data.accountAttestationIndex.edges[i].node.recipient,
       };
-      setAttestations((attestations) => [...attestations, obj]);
+
+      arr.push(obj);
     }
+    setAttestations(arr);
   }
 
   async function attest(address) {
     if (!address) {
       alert("Please enter a recipient address");
+      setRecipient("");
+      return;
+    }
+    if (address.toLowerCase() === user.metadata.address.toLowerCase()) {
+      alert("You cannot attest to yourself");
+      setRecipient("");
       return;
     }
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -133,21 +124,24 @@ const AttestEditor = () => {
     // const transaction = await eas.timestamp(offchainAttestation.uid);
     // // Optional: Wait for the transaction to be validated
     // await transaction.wait();
-    console.log(offchainAttestation);
-    const requestBody = {
-      ...offchainAttestation,
-      account: user.metadata.address.toLowerCase(),
-    };
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    };
-    // call attest api endpoint to store attestation on ComposeDB
-    await fetch("/api/attest", requestOptions)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    if (offChainAttestation) {
+      console.log(offchainAttestation);
+      const requestBody = {
+        ...offchainAttestation,
+        account: user.metadata.address.toLowerCase(),
+      };
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      };
+      // call attest api endpoint to store attestation on ComposeDB
+      await fetch("/api/attest", requestOptions)
+        .then((response) => response.json())
+        .then((data) => console.log(data));
+    }
     setRecipient("");
+    grabAttestations();
   }
 
   /** Will update title field */
@@ -178,23 +172,33 @@ const AttestEditor = () => {
                 <p className="text-base text-secondary mb-2">
                   Current Attestations:
                 </p>
-                {attestations.map((a) => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <div className="flex flex-row justify-between items-center">
-                      <div className="flex flex-row items-center">
-                        <p className="text-base text-secondary mb-2">
-                          {a.given ? "Given to " : "Received from "}
-                        </p>
-                        <p className="text-base text-secondary mb-2">
-                          {a.given
-                            ? shortAddress(a.recipient)
-                            : shortAddress(a.attester)}
-                        </p>
+                {attestations.length ? (
+                  attestations.map((a, i) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <div key={i} className="flex flex-row justify-between">
+                        <div className="flex flex-row">
+                          <p className="text-base text-secondary mb-2">
+                            {shortAddress(a.attester)}&nbsp;
+                          </p>
+                          <p className="text-base text-secondary mb-2">
+                            {a.given ? "gave to " : "received from "}&nbsp;
+                          </p>
+                          <p className="text-base text-secondary mb-2">
+                            {shortAddress(a.recipient)}
+                          </p>
+                        </div>
+                        <div className="flex flex-row">
+                          <p className="text-base text-secondary mb-2"></p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  <p className="text-base text-secondary mb-2">
+                    No attestations yet
+                  </p>
+                )}
               </div>
             </div>
           )}
