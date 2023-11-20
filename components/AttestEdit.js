@@ -159,8 +159,8 @@ const AttestEditor = () => {
     // const transaction = await eas.timestamp(offchainAttestation.uid);
     // // Optional: Wait for the transaction to be validated
     // await transaction.wait();
-    if (offChainAttestation) {
-      console.log(offchainAttestation);
+
+
       const requestBody = {
         ...offchainAttestation,
         account: user.metadata.address.toLowerCase(),
@@ -174,7 +174,7 @@ const AttestEditor = () => {
       await fetch("/api/attest", requestOptions)
         .then((response) => response.json())
         .then((data) => console.log(data));
-    }
+    
     setRecipient("");
     grabAttestations();
   }
