@@ -24,6 +24,7 @@ export default function Create() {
     if (user) {
       checkHolo(user.metadata.address);
       grabAttestations();
+      console.log(User)
     }
   }, []);
 
@@ -125,16 +126,8 @@ export default function Create() {
           <div className="min-h-screen flex">
             {/*  Page content */}
             <main className="grow overflow-hidden">
-              {/*  Site header */}
-              <Header />
-              <Hero
-                title="View Attestations You've Created or Recieved"
-                description=""
-                image
-              />
-
               <section>
-                <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-5">
                   {loaded && attestations.length ? (
                     attestations.map((a, i) => {
                       return (

@@ -21,24 +21,14 @@ export default function Create() {
     <>
       <Head>
         {/** Title */}
-        <title key="title">Share a new post | BanklessDeSci Hub</title>
+        <title key="title">View your attestations | BanklessDeSci Hub</title>
         <meta
           property="og:title"
-          content="Share a new post | BanklessDeSci Hub"
+          content="View Attestations | BanklessDeSci Hub"
           key="og_title"
         />
 
         {/** Description */}
-        <meta
-          name="description"
-          content="Discuss the future of BanklessDeSci"
-          key="description"
-        ></meta>
-        <meta
-          property="og:description"
-          content="Discuss the future of BanklessDeSci"
-          key="og_description"
-        />
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div className="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip bg-main">
@@ -49,8 +39,8 @@ export default function Create() {
               {/*  Site header */}
               <Header />
               <Hero
-                title="Sharing a new post on the BanklessDeSci Hub"
-                description="You are about to share a new post. Make sure to read our rules before doing so."
+                title="View Attestations You've Created or Recieved"
+                description=""
                 image
               />
 
