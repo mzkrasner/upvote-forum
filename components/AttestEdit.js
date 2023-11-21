@@ -5,8 +5,7 @@ import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { EASContractAddress, CUSTOM_SCHEMAS } from "../utils/utils";
 import { ethers } from "ethers";
 import { shortAddress } from "../utils";
-import { useRouter } from "next/router";
-import { set } from "zod";
+import { RotatingLines } from "react-loader-spinner";
 
 const AttestEditor = () => {
   const eas = new EAS(EASContractAddress);
@@ -14,6 +13,7 @@ const AttestEditor = () => {
   const [unique, setIsUnique] = useState(0);
   const [checked, setChecked] = useState(false);
   const [recipient, setRecipient] = useState("");
+  const [loaded, setLoaded] = useState(false);
   const [attestations, setAttestations] = useState([]);
   const textareaRef = useRef();
 
@@ -32,7 +32,7 @@ const AttestEditor = () => {
         // Try to switch to the Mumbai testnet
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x1" }], 
+          params: [{ chainId: "0x1" }],
         });
       } catch (error) {
         // This error code indicates that the chain has not been added to MetaMask.
@@ -53,8 +53,8 @@ const AttestEditor = () => {
           }
         }
       }
+    }
   };
-}
 
   async function checkHolo(address) {
     const resp = await fetch(
@@ -109,6 +109,7 @@ const AttestEditor = () => {
       arr.push(obj);
     }
     setAttestations(arr);
+    setLoaded(true);
   }
 
   async function attest(address) {
@@ -160,21 +161,20 @@ const AttestEditor = () => {
     // // Optional: Wait for the transaction to be validated
     // await transaction.wait();
 
+    const requestBody = {
+      ...offchainAttestation,
+      account: user.metadata.address.toLowerCase(),
+    };
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    };
+    // call attest api endpoint to store attestation on ComposeDB
+    await fetch("/api/attest", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
 
-      const requestBody = {
-        ...offchainAttestation,
-        account: user.metadata.address.toLowerCase(),
-      };
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody),
-      };
-      // call attest api endpoint to store attestation on ComposeDB
-      await fetch("/api/attest", requestOptions)
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-    
     setRecipient("");
     grabAttestations();
   }
@@ -207,7 +207,7 @@ const AttestEditor = () => {
                 <p className="text-base text-secondary mb-2">
                   Current Attestations:
                 </p>
-                {attestations.length ? (
+                {loaded && attestations.length ? (
                   attestations.map((a, i) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
@@ -238,10 +238,20 @@ const AttestEditor = () => {
                       </div>
                     );
                   })
-                ) : (
+                ) : loaded && !attestations.length ? (
                   <p className="text-base text-secondary mb-2">
                     No attestations yet
                   </p>
+                ) : (
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <RotatingLines
+                      strokeColor="grey"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="96"
+                      visible={true}
+                    />{" "}
+                  </div>
                 )}
               </div>
             </div>
