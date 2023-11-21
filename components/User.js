@@ -15,6 +15,7 @@ export default function Create() {
   const [loaded, setLoaded] = useState(false);
   const [attestations, setAttestations] = useState([]);
   const [checked, setChecked] = useState(false);
+  const [recieved, setReceived] = useState([]);
   const [unique, setIsUnique] = useState(0);
 
   useEffect(() => {
@@ -76,6 +77,9 @@ export default function Create() {
       };
 
       arr.push(obj);
+      if (obj.recipient === user.metadata.address.toLowerCase()) {
+        setReceived([...recieved, obj]);
+      }
     }
     console.log(arr);
     setAttestations(arr);
@@ -166,6 +170,15 @@ export default function Create() {
                         visible={true}
                       />{" "}
                     </div>
+                  )}
+                  {loaded && (
+                    <p className="text-center mt-3">
+                      {recieved.length} / 3 User Attestations Received
+                      <br />
+                        {attestations.length} User Attestations Given
+                        <br />
+                        You must recieve {3 - recieved.length} more attestations to become verified
+                    </p>
                   )}
                 </div>
               </section>
