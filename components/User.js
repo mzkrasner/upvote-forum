@@ -8,6 +8,7 @@ import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 import { useOrbis, User } from "@orbisclub/components";
 import { RotatingLines } from "react-loader-spinner";
+import { set } from "zod";
 
 export default function Create() {
   const { orbis, user, setConnectModalVis } = useOrbis();
@@ -16,6 +17,7 @@ export default function Create() {
   const [attestations, setAttestations] = useState([]);
   const [checked, setChecked] = useState(false);
   const [recieved, setReceived] = useState([]);
+  const [given, setGiven] = useState([]);
   const [unique, setIsUnique] = useState(0);
 
   useEffect(() => {
@@ -58,6 +60,8 @@ export default function Create() {
     }
     console.log(gotAttestations.data.accountAttestationIndex.edges.length);
     const arr = [];
+    const receipt = [];
+    const give = [];
     for (
       let i = 0;
       i < gotAttestations.data.accountAttestationIndex.edges.length;
@@ -77,12 +81,18 @@ export default function Create() {
       };
 
       arr.push(obj);
-      if (obj.recipient === user.metadata.address.toLowerCase()) {
-        setReceived([...recieved, obj]);
-      }
     }
+    arr.forEach((a) => {
+      if (a.given) {
+        give.push(a);
+      } else {
+        receipt.push(a);
+      }
+    });
     console.log(arr);
     setAttestations(arr);
+    setReceived(receipt);
+    setGiven(give);
     setLoaded(true);
   }
 
@@ -175,9 +185,10 @@ export default function Create() {
                     <p className="text-center mt-3">
                       {recieved.length} / 3 User Attestations Received
                       <br />
-                        {attestations.length} User Attestations Given
-                        <br />
-                        You must recieve {3 - recieved.length} more attestations to become verified
+                      {given.length} User Attestations Given
+                      <br />
+                      You must recieve {3 - recieved.length} more attestations
+                      to become verified
                     </p>
                   )}
                 </div>
