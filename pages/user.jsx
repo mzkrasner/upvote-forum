@@ -1,7 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import Head from "next/head";
 import Editor from "../components/Editor";
-import { shortAddress } from "../utils";
+import Person from "../components/User";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Sidebar from "../components/Sidebar";
@@ -11,80 +11,20 @@ import { useOrbis, User } from "@orbisclub/components";
 export default function Create() {
   const { orbis, user, setConnectModalVis } = useOrbis();
   const [create, setCreate] = useState(false);
-  const [attestations, setAttestations] = useState([]);
-  const [unique, setIsUnique] = useState(0);
 
   useEffect(() => {
     if (user) {
-      checkHolo(user.metadata.address);
     }
   }, []);
-
-  async function checkHolo(address) {
-    const resp = await fetch(
-      `https://api.holonym.io/sybil-resistance/phone/optimism?user=${address}&action-id=123456789`
-    );
-    const { result: isUnique } = await resp.json();
-    console.log(isUnique);
-    if (isUnique) {
-      await grabAttestations();
-      setIsUnique(1);
-    } else {
-      setIsUnique(2);
-    }
-  }
-
-  async function grabAttestations() {
-    const requestBody = {
-      account: user.metadata.address.toLowerCase(),
-    };
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    };
-    const gotAttestations = await fetch(
-      "/api/getattestations",
-      requestOptions
-    ).then((response) => response.json());
-    if (gotAttestations.data.accountAttestationIndex === null) {
-      console.log(gotAttestations.data);
-      return;
-    }
-    console.log(gotAttestations.data.accountAttestationIndex.edges.length);
-    const arr = [];
-    for (
-      let i = 0;
-      i < gotAttestations.data.accountAttestationIndex.edges.length;
-      i++
-    ) {
-      const obj = {
-        given:
-          gotAttestations.data.accountAttestationIndex.edges[i].node
-            .attester === user.metadata.address.toLowerCase()
-            ? true
-            : false,
-        attester:
-          gotAttestations.data.accountAttestationIndex.edges[i].node.attester,
-        recipient:
-          gotAttestations.data.accountAttestationIndex.edges[i].node.recipient,
-        id: gotAttestations.data.accountAttestationIndex.edges[i].node.id,
-      };
-
-      arr.push(obj);
-    }
-    console.log(arr);
-    setAttestations(arr);
-  }
 
   return (
     <>
       <Head>
         {/** Title */}
-        <title key="title">View Attestations | BanklessDeSci Hub</title>
+        <title key="title">Share a new post | BanklessDeSci Hub</title>
         <meta
           property="og:title"
-          content="View Attestations | BanklessDeSci Hub"
+          content="Share a new post | BanklessDeSci Hub"
           key="og_title"
         />
 
@@ -109,49 +49,36 @@ export default function Create() {
               {/*  Site header */}
               <Header />
               <Hero
-                title="View Attestations You've Created or Recieved"
-                description=""
+                title="Sharing a new post on the BanklessDeSci Hub"
+                description="You are about to share a new post. Make sure to read our rules before doing so."
                 image
               />
 
+              {/* Page content */}
               <section>
                 <div className="max-w-6xl mx-auto px-4 sm:px-6">
-                  {attestations.length ? (
-                    attestations.map((a, i) => {
-                      return (
-                        // eslint-disable-next-line react/jsx-key
-                        <div key={i} className="flex flex-row justify-between">
-                          <div className="flex flex-row">
-                            <p className="text-base text-secondary mb-2">
-                              {shortAddress(a.attester)}&nbsp;
-                            </p>
-                            <p className="text-base text-secondary mb-2">
-                              {a.given ? "gave to " : "received from "}&nbsp;
-                            </p>
-                            <p className="text-base text-secondary mb-2">
-                              {shortAddress(a.recipient)}
-                            </p>
-                          </div>
-                          <div className="flex flex-row">
-                            <p className="text-base text-secondary mb-2 text-right">
-                              <a
-                                href={`https://ceramic-temp.hirenodes.io/api/v0/streams/${a.id}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-blue-500"
-                              >
-                                Proof
-                              </a>
-                            </p>
-                          </div>
+                  <div className="md:flex md:justify-between">
+                    {/* Show post editor or connect button */}
+                    <div className="md:grow pt-0 pb-12 pr-10">
+                      {user ? (
+                        <>
+                          <Person />
+                        </>
+                      ) : (
+                        <div className="w-full text-center bg-slate-50 rounded border border-primary bg-secondary p-6">
+                          <p className="text-base text-secondary mb-2">
+                            You must be connected to share a post in this forum.
+                          </p>
+                          <button
+                            className="btn-sm py-1.5 btn-main"
+                            onClick={() => setConnectModalVis(true)}
+                          >
+                            Connect
+                          </button>
                         </div>
-                      );
-                    })
-                  ) : (
-                    <p className="text-base text-secondary mb-2">
-                      No attestations yet
-                    </p>
-                  )}
+                      )}
+                    </div>
+                  </div>
                 </div>
               </section>
             </main>
