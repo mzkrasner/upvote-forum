@@ -24,7 +24,6 @@ export default function Create() {
     if (user) {
       checkHolo(user.metadata.address);
       grabAttestations();
-      console.log(User)
     }
   }, []);
 
