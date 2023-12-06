@@ -6,10 +6,11 @@ import { EASContractAddress, CUSTOM_SCHEMAS } from "../utils/utils";
 import { ethers } from "ethers";
 import { shortAddress } from "../utils";
 import { RotatingLines } from "react-loader-spinner";
+import { GlobalContext } from "../contexts/GlobalContext";
 
-const AttestEditor = () => {
+const AttestEditor = ({ context }) => {
   const eas = new EAS(EASContractAddress);
-  const { user } = useOrbis();
+  const { orbis, user, credentials } = useOrbis();
   const [unique, setIsUnique] = useState(0);
   const [checked, setChecked] = useState(false);
   const [recipient, setRecipient] = useState("");
@@ -21,6 +22,8 @@ const AttestEditor = () => {
   useEffect(() => {
     if (user) {
       checkHolo(user.metadata.address);
+      // console.log(context)
+      updateList();
     }
     setChecked(true);
     grabAttestations();
@@ -67,6 +70,46 @@ const AttestEditor = () => {
     } else {
       setIsUnique(2);
     }
+  }
+
+  async function updateList() {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    };
+    const gotAttestations = await fetch(
+      "/api/getList",
+      requestOptions
+    ).then((response) => response.json());
+
+    const arr = gotAttestations.data.accountAttestationIndex.edges.map(
+      (a) =>
+        new Object({
+          attester: `did:pkh:eip155:1:${a.node.attester}`,
+          recipient: `did:pkh:eip155:1:${a.node.recipient}`,
+        })
+    );
+    const uniqueArr = [...new Set(arr)];
+    const multipleRecipients = uniqueArr.filter(
+      //isolate instances where the recipient value appears more than once
+      (a) => uniqueArr.filter((b) => b.recipient === a.recipient).length > 1
+    );
+
+    const final = [...new Set(multipleRecipients.map((a) => a.recipient))];
+    console.log(final);
+
+    const newOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(final),
+    };
+    const update = await fetch(
+      "/api/update",
+      newOptions
+    ).then((response) => response.json());
+
+    console.log(update);
+    
   }
 
   async function grabAttestations() {
@@ -179,6 +222,23 @@ const AttestEditor = () => {
     grabAttestations();
   }
 
+  async function update() {
+    console.log(context);
+    const res = await orbis.updateContext(context, {
+      accessRules: [
+        {
+          type: "did",
+          authorizedUsers: [
+            {
+              did: "<some new did>",
+            },
+          ],
+        },
+      ],
+    });
+    console.log(res);
+  }
+
   /** Will update title field */
   const handleAddressChange = (e) => {
     setRecipient(e.target.value);
@@ -202,6 +262,12 @@ const AttestEditor = () => {
                 onClick={() => attest(recipient)}
               >
                 Attest
+              </button>
+              <button
+                className="btn-sm py-1.5 btn-brand"
+                onClick={() => update()}
+              >
+                Update
               </button>
               <div className="w-full text-center bg-white/10 rounded border border-[#619575] p-6 mt-5">
                 <p className="text-base text-secondary mb-2">

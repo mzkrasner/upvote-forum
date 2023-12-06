@@ -13,6 +13,9 @@ export default function Create() {
   const [create, setCreate] = useState(false);
 
   useEffect(() => {
+    if(global.orbis_context){
+      console.log(global.orbis_context);
+    }
     if (user) {
     }
   }, []);
@@ -64,7 +67,7 @@ export default function Create() {
                         <>
                           <Editor />
                           {create ? (
-                            <AttestEditor />
+                            <AttestEditor context={global.orbis_context}/>
                           ) : (
                             <div className="w-full text-center bg-slate-50 rounded border border-primary bg-stone-300	 p-6">
                               <button

@@ -7,7 +7,7 @@ const server = await serveEncodedDefinition({
   ceramicURL: "https://ceramic-temp.hirenodes.io",
   graphiql: true,
   path: "./src/__generated__/definition.json",
-  port: 5001,
+  port: 5005,
 });
 
 console.log(`Server started on ${server.port}`);

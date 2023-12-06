@@ -36,6 +36,7 @@ const processEnv = {
   REACT_APP_ALCHEMY_API_KEY: process.env.REACT_APP_ALCHEMY_API_KEY,
   REACT_APP_CHAIN_ID: process.env.REACT_APP_CHAIN_ID,
   AUTHOR_KEY: process.env.AUTHOR_KEY,
+  ORBCONTEXT: process.env.CONTEXT,
 }
 
 const merged = server.merge(client)

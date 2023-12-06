@@ -179,30 +179,12 @@ function Home({ defaultPosts }) {
                                   <div className="mb-12">
                                     <div className="flex flex-col space-y-6 mb-8">
                                       {posts.map((post) => {
-                                        if (post.verified) {
-                                          return (
-                                            <div
-                                              key={post.stream_id}
-                                              className="bg-indigo-500"
-                                            >
-                                              <p>
-                                                Verified User:{" "}
-                                                {post.attestationLength}/3
-                                              </p>
-                                              <PostItem
-                                                key={post.stream_id}
-                                                post={post}
-                                              />
-                                            </div>
-                                          );
-                                        } else {
-                                          return (
-                                            <PostItem
-                                              key={post.stream_id}
-                                              post={post}
-                                            />
-                                          );
-                                        }
+                                        return (
+                                          <PostItem
+                                            key={post.stream_id}
+                                            post={post}
+                                          />
+                                        );
                                       })}
                                     </div>
 
