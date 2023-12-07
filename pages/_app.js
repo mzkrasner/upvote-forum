@@ -9,13 +9,13 @@ import { GlobalContext } from "../contexts/GlobalContext";
  * Set the global forum context here (you can create categories using the dashboard by clicking on "Create a sub-context"
  * from your main forum context)
  */
-global.orbis_context = "kjzl6cwe1jw149s1oj8tljdr4tq0hzpwbrv5q2rk77qhixgihszv4otjfp76xkh";
+global.orbis_context = "";
 
 /**
  * Set the global chat context here (the chat displayed when users click on the "Community Chat" button).
  * The Community Chat button will be displayed only if this variable is set
  */
-global.orbis_chat_context = "kjzl6cwe1jw149s1oj8tljdr4tq0hzpwbrv5q2rk77qhixgihszv4otjfp76xkh";
+global.orbis_chat_context = "";
 
 let orbis = new Orbis({
   useLit: true,

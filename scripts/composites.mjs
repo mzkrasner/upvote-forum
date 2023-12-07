@@ -1,21 +1,29 @@
-import { CeramicClient } from '@ceramicnetwork/http-client'
-import { DID } from 'dids';
+import { CeramicClient } from "@ceramicnetwork/http-client";
+import { readEncodedComposite } from "@composedb/devtools-node";
+import { DID } from "dids";
 import { readFileSync } from "fs";
 import { Ed25519Provider } from "key-did-provider-ed25519";
 import { getResolver } from "key-did-resolver";
 import { fromString } from "uint8arrays/from-string";
 
-const ceramic = new CeramicClient("https://ceramic-temp.hirenodes.io");
-
+const ceramic = new CeramicClient('http://localhost:7007');
 
 /**
  * @param {Ora} spinner - to provide progress status.
  * @return {Promise<void>} - return void when composite finishes deploying.
  */
 export const writeComposite = async (spinner) => {
-  await authenticate()
+  await authenticate();
+  const deployComposite = await readEncodedComposite(
+    //@ts-ignore
+    ceramic,
+    "./src/__generated__/definition.json"
+  );
+
+  // @ts-ignore
+  await deployComposite.startIndexingOn(ceramic);
   spinner.succeed("admin authenticated successfully");
-}
+};
 
 /**
  * Authenticating DID for publishing composite
@@ -24,20 +32,14 @@ export const writeComposite = async (spinner) => {
 const authenticate = async () => {
   // const seed = process.env.SEED
   const seed = readFileSync("./admin_seed.txt");
-  const key = fromString(
-    seed,
-    "base16"
-  );
+  const key = fromString(seed, "base16");
   const did = new DID({
     resolver: getResolver(),
-    provider: new Ed25519Provider(key)
-  })
-  await did.authenticate()
-  ceramic.did = did
-}
-
-
-
+    provider: new Ed25519Provider(key),
+  });
+  await did.authenticate();
+  ceramic.did = did;
+};
 
 // import { readFileSync } from "fs";
 // import { CeramicClient } from "@ceramicnetwork/http-client";

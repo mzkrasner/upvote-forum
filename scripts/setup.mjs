@@ -1,4 +1,4 @@
-import { CeramicClient } from "@ceramicnetwork/http-client";
+import { readFileSync } from "fs";
 import { Orbis } from "@orbisclub/components";
 import { fromString } from "uint8arrays/from-string";
 
@@ -10,8 +10,9 @@ export const runSetup = async (input) => {
     PINATA_SECRET_API_KEY: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
   });
 
+  const seed = readFileSync("./admin_seed.txt");
   const key = fromString(
-    "71fb1384bcf1d4990c11d08302dd3bfaca99820780098a14e24a14539a4e87a7",
+    seed,
     "base16"
   );
 
@@ -35,10 +36,10 @@ export const runSetup = async (input) => {
         name: input.contextName || "",
         project_id: project.doc,
         accessRules: [
-          // {
-          //   type: "did",
-          //   authorizedUsers: [],
-          // },
+          {
+            type: "did",
+            authorizedUsers: [],
+          },
         ],
         displayName: input.contextName || "",
         integrations: {},

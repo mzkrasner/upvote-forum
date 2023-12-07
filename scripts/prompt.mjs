@@ -1,12 +1,11 @@
 import inquirer from "inquirer";
-import { runSetup } from "./test.mjs";
+import { runSetup } from "./setup.mjs";
 
 export const prompt = async (questions) => {
   setTimeout(async () => {
     const answers = await inquirer.prompt(questions);
     console.log(answers);
-    const context = await runSetup(answers);
-    console.log("context: ", context);
+    await runSetup(answers);
   }, 1000);
 };
 

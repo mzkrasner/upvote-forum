@@ -1,37 +1,44 @@
-# BanklessDeSci Community Hub
+# Attestation-Gated Forum Template
 
-An open social application for the decentralized science community. Governed and moderated by the BanklessDeSci community. Built on Orbis and Ceramic with love.
+A template for setting up attestation-gated decentralized forums built with Ceramic (using ComposeDB), Orbis SDK, and Hololym. 
 
 ## Getting Started (to be updated)
 
-To get started developers should start by creating their `project` and `context` using the [Orbis Dashboard](https://useorbis.com/dashboard). The ID of the context created should be used in `_app.js`.
+1. Duplicate the existing .env.example file and rename it `.env`
 
-## Styles
-
-Most of the colors can be updated in the `styles/global.css` file which contains CSS variables applied to the main `html` property.
-
-## Getting Started Running Locally
-
-1. Install your dependencies:
+2. Install your dependencies:
 
 ```bash
 npm install
 ```
 
-2. Generate your admin seed, admin did, and ComposeDB configuration file:
+3. Create your author key (this will be your server's static seed phrase to write attestations to your ComposeDB instance). Copy-paste the resulting string into your `AUTHOR_KEY` field in your .env file:
+
+```bash
+npm run author
+```
+
+4. Generate your Ceramic admin seed, DID, and ComposeDB configuration file. Copy-paste the resulting string found in your admin_seed.txt file into your `SEED` field in your .env file:
 
 ```bash
 npm run generate
 ```
 
-3. Create a .env file and enter the required environment variables outlined in .env.example. Feel free to copy them over as-is since the ones in .env.example are just dummy ones
+5. Create your Orbis project and context from the command line (follow the prompts in your terminal):
 
-4. Run the application (make sure you are using node version 16):
-
-#### Development
 ```bash
-nvm use 16
-npm run dev
+npm run generateOrbis
 ```
 
+After you've completed the series of prompts, you will see a log note that says "context created: ". Copy the value starting with a "k" from the `doc` field, and paste it into your `ORBCONTEXT` field in your .env file. Finally, locate your file found at /pages/_app.js and paste the same value for the corresponding constants: 
+
+global.orbis_context
+global.orbis_chat_context
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Styles
+
+Most of the colors can be updated in the `styles/global.css` file which contains CSS variables applied to the main `html` property.
+
+

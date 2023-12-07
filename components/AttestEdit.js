@@ -22,8 +22,6 @@ const AttestEditor = ({ context }) => {
   useEffect(() => {
     if (user) {
       checkHolo(user.metadata.address);
-      // console.log(context)
-      updateList();
     }
     setChecked(true);
     grabAttestations();
@@ -70,46 +68,6 @@ const AttestEditor = ({ context }) => {
     } else {
       setIsUnique(2);
     }
-  }
-
-  async function updateList() {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    };
-    const gotAttestations = await fetch(
-      "/api/getList",
-      requestOptions
-    ).then((response) => response.json());
-
-    const arr = gotAttestations.data.accountAttestationIndex.edges.map(
-      (a) =>
-        new Object({
-          attester: `did:pkh:eip155:1:${a.node.attester}`,
-          recipient: `did:pkh:eip155:1:${a.node.recipient}`,
-        })
-    );
-    const uniqueArr = [...new Set(arr)];
-    const multipleRecipients = uniqueArr.filter(
-      //isolate instances where the recipient value appears more than once
-      (a) => uniqueArr.filter((b) => b.recipient === a.recipient).length > 1
-    );
-
-    const final = [...new Set(multipleRecipients.map((a) => a.recipient))];
-    console.log(final);
-
-    const newOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(final),
-    };
-    const update = await fetch(
-      "/api/update",
-      newOptions
-    ).then((response) => response.json());
-
-    console.log(update);
-    
   }
 
   async function grabAttestations() {
@@ -292,7 +250,7 @@ const AttestEditor = ({ context }) => {
                         <div className="flex flex-row">
                           <p className="text-base text-secondary mb-2 text-right">
                             <a
-                              href={`https://ceramic-temp.hirenodes.io/api/v0/streams/${a.id}`}
+                              href={`http://localhost:7007/api/v0/streams/${a.id}`}
                               target="_blank"
                               rel="noreferrer"
                               className="text-blue-500"

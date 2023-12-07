@@ -35,7 +35,45 @@ const Editor = ({post}) => {
   /** Will load the details of the context and check if user has access to it  */
   useEffect(() => {
     if(category && category != "") {
+      updateList();
       loadContextDetails();
+    }
+
+    async function updateList() {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      };
+      const gotAttestations = await fetch("/api/getList", requestOptions).then(
+        (response) => response.json()
+      );
+      if(gotAttestations.data.accountAttestationIndex == null) return;
+      const arr = gotAttestations.data.accountAttestationIndex.edges.map(
+        (a) =>
+          new Object({
+            attester: `did:pkh:eip155:1:${a.node.attester}`,
+            recipient: `did:pkh:eip155:1:${a.node.recipient}`,
+          })
+      );
+      const uniqueArr = [...new Set(arr)];
+      const multipleRecipients = uniqueArr.filter(
+        //isolate instances where the recipient value appears more than once
+        (a) => uniqueArr.filter((b) => b.recipient === a.recipient).length > 1
+      );
+  
+      const final = [...new Set(multipleRecipients.map((a) => a.recipient))];
+      console.log(final);
+  
+      const newOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(final),
+      };
+      const update = await fetch("/api/update", newOptions).then((response) =>
+        response.json()
+      );
+  
+      console.log(update);
     }
 
     async function loadContextDetails() {

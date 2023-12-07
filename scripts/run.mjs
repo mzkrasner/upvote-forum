@@ -8,33 +8,33 @@ import { writeComposite } from './composites.mjs';
 const events = new EventEmitter()
 const spinner = ora();
 
-// const ceramic = spawn("npm", ["run", "ceramic"]);
-// ceramic.stdout.on("data", (buffer) => {
-//   console.log('[Ceramic]', buffer.toString())
-//   if (buffer.toString().includes("0.0.0.0:7007")) {
-//     events.emit("ceramic", true);
-//     spinner.succeed("ceramic node started");
-//   }
-// })
+const ceramic = spawn("npm", ["run", "ceramic"]);
+ceramic.stdout.on("data", (buffer) => {
+  console.log('[Ceramic]', buffer.toString())
+  if (buffer.toString().includes("0.0.0.0:7007")) {
+    events.emit("ceramic", true);
+    spinner.succeed("ceramic node started");
+  }
+})
 
-// ceramic.stderr.on('data', (err) => {
-//   console.log(err.toString())
-// })
+ceramic.stderr.on('data', (err) => {
+  console.log(err.toString())
+})
 
-// const bootstrap = async () => {
-//   // TODO: convert to event driven to ensure functions run in correct orders after releasing the bytestream.
-//   // TODO: check if .grapql files match their .json counterparts
-//   //       & do not create the model if it already exists & has not been updated
-//   try {
-//     spinner.info("[Composites] bootstrapping composites");
-//     await writeComposite(spinner)
-//     spinner.succeed("[Composites] composites bootstrapped");
-//   } catch (err) {
-//     spinner.fail(err.message)
-//     ceramic.kill()
-//     throw err
-//   }
-// }
+const bootstrap = async () => {
+  // TODO: convert to event driven to ensure functions run in correct orders after releasing the bytestream.
+  // TODO: check if .grapql files match their .json counterparts
+  //       & do not create the model if it already exists & has not been updated
+  try {
+    spinner.info("[Composites] bootstrapping composites");
+    await writeComposite(spinner)
+    spinner.succeed("[Composites] composites bootstrapped");
+  } catch (err) {
+    spinner.fail(err.message)
+    ceramic.kill()
+    throw err
+  }
+}
 
 const auth = async () => {
   // TODO: convert to event driven to ensure functions run in correct orders after releasing the bytestream.
@@ -46,7 +46,7 @@ const auth = async () => {
     spinner.succeed("[Ceramic] Ceramic authenticated");
   } catch (err) {
     spinner.fail(err.message)
-    // ceramic.kill()
+    ceramic.kill()
     throw err
   }
 }
@@ -70,29 +70,29 @@ const next = async () => {
 
 const start = async () => {
   try {
-    // spinner.start('[Ceramic] Starting Ceramic node\n')
-    // events.on('ceramic', async (isRunning) => {
-      // if (isRunning) {
+    spinner.start('[Ceramic] Starting Ceramic node\n')
+    events.on('ceramic', async (isRunning) => {
+      if (isRunning) {
         await auth()
         await graphiql()
         await next()
-      // }
-      // if(isRunning === false) {
-      //   ceramic.kill()
-      //   process.exit()
-      // }
-    // })
+      }
+      if(isRunning === false) {
+        ceramic.kill()
+        process.exit()
+      }
+    })
   } catch (err) {
-    // ceramic.kill()
+    ceramic.kill()
     spinner.fail(err)
   }
 }
 
 start()
 
-// process.on("SIGTERM", () => {
-//   ceramic.kill();
-// });
-// process.on("beforeExit", () => {
-//   ceramic.kill();
-// });
+process.on("SIGTERM", () => {
+  ceramic.kill();
+});
+process.on("beforeExit", () => {
+  ceramic.kill();
+});

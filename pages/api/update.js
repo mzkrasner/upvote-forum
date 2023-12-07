@@ -1,13 +1,8 @@
-import { ComposeClient } from "@composedb/client";
-import { RuntimeCompositeDefinition } from "@composedb/types";
-import { NextApiRequest, NextApiResponse } from "next";
 import { Orbis } from "@orbisclub/components";
-import { env } from "../../env.mjs";
-import { definition } from "../../src/__generated__/definition.js";
 import { fromString } from "uint8arrays/from-string";
-import { set } from "zod";
 
 const CONTEXT = process.env.ORBCONTEXT;
+const SEED = process.env.SEED;
 
 export default async function updateContext(req, res) {
   let orbis = new Orbis({
@@ -17,12 +12,9 @@ export default async function updateContext(req, res) {
     PINATA_SECRET_API_KEY: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
   });
 
-  const key = fromString(
-    "71fb1384bcf1d4990c11d08302dd3bfaca99820780098a14e24a14539a4e87a7",
-    "base16"
-  );
+  const key = fromString(SEED);
 
-  const result = await orbis.connectWithSeed(key);
+  await orbis.connectWithSeed(key);
   const whiteList = req.body;
 
   try {
@@ -33,6 +25,19 @@ export default async function updateContext(req, res) {
     const currContext = await orbis.getContext(CONTEXT);
     console.log(currContext, "currContext");
     console.log(currContext.data.content);
+    const currAccessRules = currContext.data.content.accessRules.filter(
+      (item) => item.type === "did"
+    );
+    const currWhiteList = currAccessRules[0].authorizedUsers;
+    console.log(
+      currWhiteList.length === whiteList.length,
+      "currWhiteList === whiteList"
+    );
+    if (currWhiteList.length === whiteList.length) {
+      return res.json({
+        message: "No changes required",
+      });
+    }
     const mapped = whiteList.map((item) => {
       return { did: item };
     });
@@ -47,7 +52,6 @@ export default async function updateContext(req, res) {
     });
     console.log(update);
     return res.json(update);
-    // return res.json(whiteList);
   } catch (err) {
     res.json({
       err,
