@@ -30,10 +30,10 @@ npm run generate
 npm run generateOrbis
 ```
 
-After you've completed the series of prompts, you will see a log note that says "context created: ". Copy the value starting with a "k" from the `doc` field, and paste it into your `ORBCONTEXT` field in your .env file. Finally, locate your file found at /pages/_app.js and paste the same value for the corresponding constants: 
+After you've completed the series of prompts, you will see a log note that says "This is your parent context: ". Copy the value starting with a "k" and paste it into your `ORBCONTEXT` field in your .env file. Finally, locate your file found at /pages/_app.js and paste the same value for the corresponding constants: 
 
-global.orbis_context
-global.orbis_chat_context
+`global.orbis_context`
+`global.orbis_chat_context`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

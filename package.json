@@ -6,7 +6,7 @@
     "generate": "node scripts/commands.mjs",
     "dev": "node scripts/run.mjs",
     "author": "node scripts/author.mjs",
-    "generateOrbis": "node scripts/prompt.mjs",
+    "generateOrbis": "node scripts/promptCategories.mjs",
     "nextDev": "next dev",
     "ceramic": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' ceramic daemon --config ./composedb.config.json",
     "ceramic:local": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' npx @ceramicnetwork/cli daemon",

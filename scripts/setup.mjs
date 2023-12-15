@@ -3,6 +3,7 @@ import { Orbis } from "@orbisclub/components";
 import { fromString } from "uint8arrays/from-string";
 
 export const runSetup = async (input) => {
+  let parentContext = "";
   let orbis = new Orbis({
     node: "https://node2.orbis.club",
     PINATA_GATEWAY: "https://orbis.mypinata.cloud/ipfs/",
@@ -11,10 +12,7 @@ export const runSetup = async (input) => {
   });
 
   const seed = readFileSync("./admin_seed.txt");
-  const key = fromString(
-    seed,
-    "base16"
-  );
+  const key = fromString(seed, "base16");
 
   const res = await orbis.connectWithSeed(key);
   console.log("orbis connected: ", res);
@@ -32,20 +30,43 @@ export const runSetup = async (input) => {
       },
     })
     .then(async (project) => {
-      const context = await orbis.createContext({
-        name: input.contextName || "",
-        project_id: project.doc,
-        accessRules: [
-          {
-            type: "did",
-            authorizedUsers: [],
-          },
-        ],
-        displayName: input.contextName || "",
-        integrations: {},
-      });
-      console.log("project created: ", project);
-      console.log("context created: ", context);
-      return context;
+      const context = await orbis
+        .createContext({
+          name: input.contextName || "",
+          project_id: project.doc,
+          accessRules: input.contextGate
+            ? [
+                {
+                  type: "did",
+                  authorizedUsers: [],
+                },
+              ]
+            : [],
+          displayName: input.contextName || "",
+          integrations: {},
+        })
+        .then((context) => {
+          parentContext = context.doc;
+          if (input.categories.length) {
+            input.categories.forEach(async (category) => {
+              await orbis.createContext({
+                name: category.name,
+                context: context.doc,
+                project_id: project.doc,
+                accessRules: category.gated
+                  ? [
+                      {
+                        type: "did",
+                        authorizedUsers: [],
+                      },
+                    ]
+                  : [],
+                displayName: category.name,
+                integrations: {},
+              });
+            });
+          }
+        });
     });
+  console.log("This is your parent context: ", parentContext);
 };
