@@ -65,10 +65,20 @@ export default function Create() {
                     <div className="md:grow pt-0 pb-12 pr-10">
                       {user ? (
                         <>
-                          <Editor />
+                          
                           {create ? (
+                            <>
                             <AttestEditor context={global.orbis_context}/>
+                            <button
+                                className="btn-sm py-1.5 btn-secondary mt-3"
+                                onClick={() => setCreate(false)}
+                              >
+                                Back
+                              </button>
+                            </>
                           ) : (
+                            <>
+                            <Editor />
                             <div className="w-full text-center bg-slate-50 rounded border border-primary bg-stone-300	 p-6">
                               <button
                                 className="btn-sm py-1.5 btn-secondary"
@@ -77,6 +87,7 @@ export default function Create() {
                                 Create an Attestation
                               </button>
                             </div>
+                            </>
                           )}
                         </>
                       ) : (

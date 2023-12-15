@@ -6,7 +6,6 @@ import { EASContractAddress, CUSTOM_SCHEMAS } from "../utils/utils";
 import { ethers } from "ethers";
 import { shortAddress } from "../utils";
 import { RotatingLines } from "react-loader-spinner";
-import { GlobalContext } from "../contexts/GlobalContext";
 
 const AttestEditor = ({ context }) => {
   const eas = new EAS(EASContractAddress);
@@ -180,23 +179,6 @@ const AttestEditor = ({ context }) => {
     grabAttestations();
   }
 
-  async function update() {
-    console.log(context);
-    const res = await orbis.updateContext(context, {
-      accessRules: [
-        {
-          type: "did",
-          authorizedUsers: [
-            {
-              did: "<some new did>",
-            },
-          ],
-        },
-      ],
-    });
-    console.log(res);
-  }
-
   /** Will update title field */
   const handleAddressChange = (e) => {
     setRecipient(e.target.value);
@@ -220,12 +202,6 @@ const AttestEditor = ({ context }) => {
                 onClick={() => attest(recipient)}
               >
                 Attest
-              </button>
-              <button
-                className="btn-sm py-1.5 btn-brand"
-                onClick={() => update()}
-              >
-                Update
               </button>
               <div className="w-full text-center bg-white/10 rounded border border-[#619575] p-6 mt-5">
                 <p className="text-base text-secondary mb-2">
