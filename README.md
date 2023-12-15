@@ -46,6 +46,11 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Set Up Your Own Production Node
+You can easily set up your own node running in the cloud. Simply visit the [README](prod-node-setup/README.md) in the `/prod-node-setup` directory and follow the steps there.
+
+Once you've completed the steps and have your own endpoint, you can replace all instances of `https://ceramic-temp.hirenodes.io` with yours.
+
 ## Styles
 
 Most of the colors can be updated in the `styles/global.css` file which contains CSS variables applied to the main `html` property.

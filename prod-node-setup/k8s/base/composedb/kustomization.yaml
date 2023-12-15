@@ -1,0 +1,27 @@
+---
+namespace: ceramic
+
+resources:
+  - ./manifests/ipfs.yaml
+  - ./manifests/composedb.yaml
+  - ./manifests/postgres.yaml
+
+configMapGenerator:
+  - name: composedb-init
+    files:
+      - ./daemon-config.json
+      - ./compose-init.sh
+  - name: composedb-env
+    envs:
+      - ./composedb.env
+
+images:
+  - name: 3boxben/composedb
+    newName: 3boxben/composedb@sha256
+    newTag: c9b94137e1e44cfc77895ca2f1a48f00bc289f5c349bb0295d2786b660c2ad7b
+  - name: postgres/postgres
+    newName: postgres
+    newTag: 15-alpine
+  - name: ipfs/ipfs
+    newName: ceramicnetwork/go-ipfs-daemon@sha256
+    newTag: 836f9832efde6d0c561dedb1529202eecb065c2bb85b5f04f29b0b72ba7f60ba

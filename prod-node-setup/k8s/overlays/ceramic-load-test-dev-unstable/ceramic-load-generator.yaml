@@ -1,0 +1,24 @@
+---
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: ceramic-load-generator
+spec:
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      parallelism: 50
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: ceramic-load-generator
+              image: 3boxben/ceramic-load-generator@sha256:c7ae0add924d9f8f67385e39c62ea5246a97edfc7c1226562ecdbf17a62c0f94
+              env:
+                - name: API_HOST
+                  value: http://composedb:7007
+                - name: UPDATE_ITERATIONS
+                  value: "10"
+  concurrencyPolicy: Allow
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 10
