@@ -1,6 +1,8 @@
-# Attestation-Gated Forum Template
+# Attestation-Gated Forum Template (Shared Node Branch)
 
 A template for setting up attestation-gated decentralized forums built with Ceramic (using ComposeDB), Orbis SDK, and Hololym. 
+
+Note: this branch uses an existing Ceramic endpoint running on Testnet. To set up your own node for local testing, or to deploy your own production node, check out those dedicated branches.
 
 ## Getting Started (to be updated)
 
