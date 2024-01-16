@@ -33,6 +33,7 @@ export default async function getList(req, res) {
       }
     `);
     console.log(data)
+    console.log('data')
     return res.json(data);
   } catch (err) {
     res.json({
