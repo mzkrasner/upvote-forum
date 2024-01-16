@@ -7,6 +7,7 @@ import { shortAddress, getIpfsLink, getTimestamp, sleep } from "../utils";
 import { useRouter } from 'next/router';
 import { ExternalLinkIcon, LinkIcon, CodeIcon, LoadingCircle } from "./Icons";
 import ArticleContent from "./ArticleContent";
+import { set } from 'zod';
 
 const Editor = ({post}) => {
   const { orbis, user, credentials } = useOrbis();
@@ -24,13 +25,36 @@ const Editor = ({post}) => {
   const [toolbarStyle, setToolbarStyle] = useState({});
   const [storedSelectionStart, setStoredSelectionStart] = useState(0);
   const [storedSelectionEnd, setStoredSelectionEnd] = useState(0);
-
+  const [userLocation, setUserLocation] = useState(null);
   /** Views:
    * 0: Editor
    * 1: End-result
    */
   const [view, setView] = useState(0);
   const textareaRef = useRef();
+  const getUserLocation = () => {
+    // if geolocation is supported by the users browser
+
+      
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+      } else {
+        console.log("Geolocation not supported");
+      }
+      
+      function success(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      }
+      
+      function error() {
+        console.log("Unable to retrieve your location");
+      }
+    
+    // if geolocation is not supported by the users browser
+  
+  };
 
   /** Will load the details of the context and check if user has access to it  */
   useEffect(() => {
@@ -38,8 +62,11 @@ const Editor = ({post}) => {
       loadContextDetails();
     }
 
+    
+
     async function loadContextDetails() {
       setAccessRulesLoading(true);
+      getUserLocation();
       setHasAccess(false)
       let { data, error } = await orbis.getContext(category);
       if(data && data.content) {
@@ -397,10 +424,12 @@ const Categories = ({category, setCategory}) => {
   const { orbis, user } = useOrbis();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
 
   /** Load all of the categories (sub-contexts) available in this forum */
   useEffect(() => {
     loadContexts();
+    getUserLocation();
     async function loadContexts() {
       setLoading(true);
       let { data, error } = await orbis.api.from("orbis_contexts").select().eq('context', global.orbis_context).order('created_at', { ascending: false });
@@ -414,9 +443,35 @@ const Categories = ({category, setCategory}) => {
     }
   }, []);
 
+  const getUserLocation = () => {
+    // if geolocation is supported by the users browser
+
+      
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+      } else {
+        console.log("Geolocation not supported");
+      }
+      
+      function success(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        setUserLocation({latitude, longitude});
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      }
+      
+      function error() {
+        console.log("Unable to retrieve your location");
+      }
+    
+    // if geolocation is not supported by the users browser
+  
+  };
+
   return(
     <div className="flex flex-col mt-2 mb-4 items-center text-sm">
       <span className="text-primary font-medium text-base">Which category do you want to share your post into?</span>
+      {userLocation && <span className="text-primary font-medium text-base">Latitude: {userLocation.latitude}, Longitude: {userLocation.longitude}</span>}
       <div className="flex flex-row flex-wrap space-x-2 mt-2">
         {categories.map((cat) => {
           return (
